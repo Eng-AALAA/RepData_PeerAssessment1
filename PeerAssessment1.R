@@ -1,47 +1,39 @@
-Reproducible Research - Peer Assessment 1
-========================================================
-
-```{r}
 # A.Loading and preprocessing the data
 
 setwd("~/GitHub/RepData_PeerAssessment1")
 data <- read.csv("activity.csv")
-library(lattice) # used for xy plot
+
+library(lattice) #used for xyplot
 
   #exploring data
 names(data)
-#str(data)
-#summary(data$steps)
-#unique(data$steps)
+str(data)
+summary(data$steps)
+unique(data$steps)
 
-#summary(data$date)
-#length(unique(data$date))
+summary(data$date)
+length(unique(data$date))
 
-#summary(data$interval)
-#unique(data$interval)
+summary(data$interval)
+unique(data$interval)
 #------------------------------------------------------------
-
   # data cleansing 
 refined.data <- data[!(is.na(data$steps)), ]
-#str(refined.data)
-#summary(refined.data$steps)
+str(refined.data)
+summary(refined.data$steps)
 #------------------------------------------------------------
 
 #B.What is mean total number of steps taken per day?
 
 sum.data           <- aggregate(steps ~ date , data=refined.data, FUN=sum)
 names(sum.data)    <- c("date","sum.steps")
-```
 
-You can also embed plots, for example:
-
-```{r fig.width=7, fig.height=6}
 #Figure 1
+
 xyplot(sum.data $sum.steps ~ sum.data $date , 
        layout = c(1,1),type="h",xlab="Date",ylab="Total Number of Steps") 
-```
 
-```{r}
+
 mean.data          <- aggregate(steps ~ date , data=refined.data, FUN=mean)
 names(mean.data)   <- c("date","mean.steps")
 head(mean.data)
@@ -49,23 +41,17 @@ head(mean.data)
 median.data        <- aggregate(steps ~ date , data=refined.data, FUN=c("median"))
 names(median.data) <- c("date","median.steps")
 head(median.data)
-```
-
-```{r}
+#------------------------------------------------------------
 #C. What is the average daily activity pattern?
 #1. Make a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and 
 #the average number of steps taken, averaged across all days (y-axis)
 meaninterval.data        <- aggregate(steps ~ interval , data=data, FUN=mean)
 names(meaninterval.data) <- c("interval", "mean.steps")
-```
 
-```{r fig.width=7, fig.height=6}
 #Figure 2
 xyplot(meaninterval.data $mean.steps ~ meaninterval.data $interval , 
        layout = c(1,1),type="l",xlab="Interval",ylab="Number of Steps") 
-```
 
-```{r}
 #2.Which 5-minute interval, on average across all the days in the dataset, contains 
 #the maximum number of steps?
 
@@ -125,9 +111,7 @@ mergedinterval.data[is.na(mergedinterval.data$steps),]$steps <-
 #checking operation
 NA.mergedintervaldata <- mergedinterval.data[is.na(mergedinterval.data$steps), ]
 nrow(NA.mergedintervaldata) # 0 rows OK - All NULL values are filled up
-```
-
-```{r}
+#-----------------------------------------------------------------
 # 4.Make a histogram of the total number of steps taken each day and Calculate and report 
 #the mean and median total number of steps taken
 #per day. Do these values differ from the estimates from the first part of the assignment?
@@ -140,15 +124,10 @@ names(newsum.data)    <- c("date","newsum.steps")
 # plot(sum.data)
 # plot(newsum.data)
 
-```
-
-```{r fig.width=7, fig.height=6}
 #Figure 3
 xyplot(newsum.data $newsum.steps ~ newsum.data $date 
        ,type="h",xlab="Date",ylab="Total Number of Steps") 
-```
 
-```{r}
 newmean.data          <- aggregate(steps ~ date , data=mergedinterval.data, FUN=mean)
 names(newmean.data)   <- c("date","newmean.steps")
 head (newmean.data)
@@ -179,13 +158,7 @@ ifelse(  as.POSIXlt(refined.data[i, ]$date)$wday %in% c("5","6"),
   # converting to factor
 refined.data$daytype <- as.factor(refined.data$daytype)
 #----------------------------------------------------------------
-```
-
-
-```{r fig.width=7, fig.height=6}
 # Figure 4
 xyplot(refined.data$steps ~ refined.data$interval | refined.data$daytype, 
        layout = c(1,2),type="l",xlab="Interval",ylab="Number of Steps") 
-
-```
 
